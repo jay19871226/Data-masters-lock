@@ -1,0 +1,34 @@
+public class EncryptFile
+{
+    public static void main(String args[]) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
+//Encrypt Mode
+        FileOutputStream outputStream = new FileOutputStream(new File("D:\\encryptedNewStringFile.txt"));
+        Key secretKey = new SecretKeySpec("encKey".getBytes(), "Blowfish");
+        Cipher cipher = Cipher.getInstance("Blowfish");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] getFileBytes = "writing a file using encryption ".getBytes();
+        byte[] outputBytes = cipher.doFinal(getFileBytes);
+        outputStream.write(outputBytes);
+        getFileBytes = "\n".getBytes();
+        outputBytes = cipher.doFinal(getFileBytes);
+        outputStream.write(outputBytes);
+        getFileBytes = "This is New Line 2 \nThis is NewLine 3".getBytes();
+        outputBytes = cipher.doFinal(getFileBytes);
+        outputStream.write(outputBytes);
+        outputStream.close();
+//Decrypt Mode
+        File curFile = new File("D:\\encryptedNewStringFile.txt");
+        secretKey = new SecretKeySpec("encKey".getBytes(), "Blowfish");
+        cipher = Cipher.getInstance("Blowfish/ECB/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        getFileBytes = Files.readAllBytes(curFile.toPath());
+        outputBytes = cipher.doFinal(getFileBytes);
+        InputStream bai = new ByteArrayInputStream(outputBytes);
+        BufferedReader bfReader = new BufferedReader(new InputStreamReader(bai));
+        Scanner scan = new Scanner(bfReader);
+        while(scan.hasNextLine())
+        {
+            System.out.println(scan.nextLine());
+        }
+}
+}
